@@ -10,6 +10,7 @@ public class perlinMap : MonoBehaviour
     public float scale = 20.0F; //how varied the terrain will be. Lower numbers result in flatness
     public int power = 1; //an exponent that will be used to create valleys; increase for depth
     public bool enableTerraces = false;
+    public bool debugMode = false; //allows real time modification of terrain to test values
 
     private Terrain terrain;
     private TerrainData tdata;
@@ -20,6 +21,13 @@ public class perlinMap : MonoBehaviour
         terrain = GetComponent<Terrain>();
         tdata = terrain.terrainData;
         generateTerrain();
+    }
+    public void Update()
+    {
+        if (debugMode)
+        {
+            generateTerrain();
+        }
     }
 
     void generateTerrain()
