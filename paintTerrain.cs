@@ -11,7 +11,7 @@ public class paintTerrain : MonoBehaviour
         public float startingHeight;
     }
 
-    public SplatHeights[] colorHeights;
+    public SplatHeights[] colorHeights; //set the size of this to the number of texture layers you're adding to the terrain
     TerrainData tdata;
 
     // Start is called before the first frame update
@@ -34,7 +34,11 @@ public class paintTerrain : MonoBehaviour
 
                 for (int i = 0; i < colorHeights.Length; i++)
                 {
-                    if (terrainHeight >= colorHeights[i].startingHeight)
+                    if (i == colorHeights.Length - 1)
+                    {
+                        splat[i] = 1;
+                    }
+                    else if ((terrainHeight >= colorHeights[i].startingHeight) && (terrainHeight <= colorHeights[i + 1].startingHeight))
                     {
                         splat[i] = 1;
                     }
