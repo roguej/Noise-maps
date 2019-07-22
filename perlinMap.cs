@@ -3,51 +3,53 @@ using System.Collections;
 
 public class perlinMap : MonoBehaviour
 {
-    public int pixelWidth;
-    public int pixelHeight;
+    public int width = 500;
+    public int height = 500;
+    public int depth = 20; //how high any mountains will go
 
-    public float xOrigin;
-    public float yOrigin;
+    public float scale = 20.0F; //how varied the terrain will be. Lower numbers result in flatness
+    public int power = 1; //an exponent that will be used to create valleys; increase for depth
 
-    public float scale = 1.0F;
+    private Terrain terrain;
+    private TerrainData tdata;
 
-    private Texture2D noiseTexture;
-    private Color[] pixels;
-    private Renderer rend;
-    
 
     public void Start()
     {
-        rend = GetComponent<Renderer>();
-
-        // Set up the texture and a Color array to hold pixels during processing.
-        noiseTexture = new Texture2D(pixelWidth, pixelHeight);
-        pixels = new Color[noiseTexture.width * noiseTexture.height];
-        rend.material.mainTexture = noiseTexture;
-        CalcNoise();
+        terrain = GetComponent<Terrain>();
+        tdata = terrain.terrainData;
+        generateTerrain();
     }
 
-        void CalcNoise()
+    void generateTerrain()
     {
-        // For each pixel in the texture...
-        float y = 0.0F;
+        tdata.heightmapResolution = width + 1;
+        tdata.size = new Vector3(width, depth, height);
+        
+        tdata.SetHeights(0, 0, CalcHeights());
+    }
 
-        while (y < noiseTexture.height)
+    float[,] CalcHeights()
+    {
+        float[,] heights = new float[width, height];
+
+        for (int x = 0; x < width; x++)
         {
-            float x = 0.0F;
-            while (x < noiseTexture.width)
+            for (int y = 0; y < height; y++)
             {
-                float xCoord = xOrigin + x / noiseTexture.width * scale;
-                float yCoord = yOrigin + y / noiseTexture.height * scale;
-                float sample = Mathf.PerlinNoise(xCoord, yCoord);
-                pixels[(int)y * noiseTexture.width + (int)x] = new Color(sample, sample, sample);
-                x++;
+                float e = 1f * CalcNoiseForPixel(1.0f * x, 1.0f * y)
+                                + 0.5f * CalcNoiseForPixel(2.0f * x, 2.0f * y)
+                                + 0.25f * CalcNoiseForPixel(4.0f * x, 2.0f * y);
+                heights[x, y] = Mathf.Pow(e, power);
             }
-            y++;
         }
+        return heights;
+    }
 
-        // Copy the pixel data to the texture and load it into the GPU.
-        noiseTexture.SetPixels(pixels);
-        noiseTexture.Apply();
+    float CalcNoiseForPixel(float x, float y)
+    {
+        float xCoord = x / width * scale;
+        float yCoord = y / height * scale;
+        return Mathf.PerlinNoise(xCoord, yCoord);
     }
 }
