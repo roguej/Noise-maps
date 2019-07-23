@@ -1,6 +1,6 @@
 # NoiseMaps-Unity
 
-Noise generated terrains in Unity. Using this is as simple as cloning the C# script into your project and attaching it to a Terrain Game object. Each script will modify the terrain it is assigned to.
+Noise generated terrains in Unity. Using this is as simple as cloning the repository into your project and attaching each script to a Terrain Game object. Each script will modify the terrain it is assigned to.
 
 ## perlinMap.cs
 Generates a Terrain using Perlin noise.
