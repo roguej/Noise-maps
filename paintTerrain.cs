@@ -13,10 +13,25 @@ public class paintTerrain : MonoBehaviour
     }
 
     public SplatHeights[] colorHeights; //set the size of this to the number of texture layers you're adding to the terrain
+    public bool debugMode = false; //allows real time modification of terrainPainter to test values
     TerrainData tdata;
 
     // Start is called before the first frame update
     void Start()
+    {
+       tdata.SetAlphamaps(0, 0, calculateSplatMap());
+    }
+
+    void Update()
+    {
+        if (debugMode)
+        {
+            tdata.SetAlphamaps(0, 0, calculateSplatMap());
+        }
+    }
+
+
+    float[,,] calculateSplatMap()
     {
         tdata = Terrain.activeTerrain.terrainData;
         int yMax = tdata.alphamapHeight;
@@ -47,8 +62,7 @@ public class paintTerrain : MonoBehaviour
                 }
             }
         }
-
-        tdata.SetAlphamaps(0, 0, splatmapData);
+        return splatmapData;
     }
 
 
