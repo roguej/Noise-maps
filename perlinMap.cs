@@ -9,8 +9,12 @@ public class perlinMap : MonoBehaviour
 
     public float scale = 20.0F; //how varied the terrain will be. Lower numbers result in flatness
     public int power = 1; //an exponent that will be used to create valleys; increase for depth
+    public int terraceFactor = 1; //an exponent that will be used to create valleys; increase for depth
     public bool enableTerraces = false;
     public bool debugMode = false; //allows real time modification of terrain to test values
+
+    public float minElevation;
+    public float maxElevation;
 
     private Terrain terrain;
     private TerrainData tdata;
@@ -49,9 +53,11 @@ public class perlinMap : MonoBehaviour
                 float e = 1f * CalcNoiseForPixel(1.0f * x, 1.0f * y)
                                 + 0.5f * CalcNoiseForPixel(2.0f * x, 2.0f * y)
                                 + 0.25f * CalcNoiseForPixel(4.0f * x, 2.0f * y);
+                setMaxElevation(e);
+                setMinElevation(e);
                 if(enableTerraces)
                 {
-                    heights[x, y] = Mathf.Round(e * 12) / 12;
+                    heights[x, y] = Mathf.Round(e * terraceFactor) / terraceFactor;
                 }
                 else
                 {
@@ -70,5 +76,19 @@ public class perlinMap : MonoBehaviour
         return Mathf.PerlinNoise(xCoord, yCoord);
     }
 
+    void setMaxElevation(float e)
+    {
+        if (e > maxElevation)
+        {
+            maxElevation = e;
+        }
+    }
 
+    void setMinElevation(float e)
+    {
+        if (e < minElevation)
+        {
+            minElevation = e;
+        }
+    }
 }
