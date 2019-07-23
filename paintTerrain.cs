@@ -9,6 +9,7 @@ public class paintTerrain : MonoBehaviour
     {
         public int textureIndex;
         public float startingHeight;
+        public float endingHeight;
     }
 
     public SplatHeights[] colorHeights; //set the size of this to the number of texture layers you're adding to the terrain
@@ -34,11 +35,8 @@ public class paintTerrain : MonoBehaviour
 
                 for (int i = 0; i < colorHeights.Length; i++)
                 {
-                    if (i == colorHeights.Length - 1)
-                    {
-                        splat[i] = 1;
-                    }
-                    else if ((terrainHeight >= colorHeights[i].startingHeight) && (terrainHeight <= colorHeights[i + 1].startingHeight))
+                    
+                    if ((terrainHeight >= colorHeights[i].startingHeight) && (terrainHeight <= colorHeights[i].endingHeight))
                     {
                         splat[i] = 1;
                     }
